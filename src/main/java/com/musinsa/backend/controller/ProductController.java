@@ -1,9 +1,10 @@
 package com.musinsa.backend.controller;
 
-import com.musinsa.backend.model.Product;
+import com.musinsa.backend.dto.ProductRequestDto;
+import com.musinsa.backend.dto.ProductResponseDto;
 import com.musinsa.backend.service.ProductService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,23 +17,22 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping
-    public ResponseEntity<List<Product>> getProduct() {
-        return ResponseEntity.ok(productService.getAllProducts());
+    public List<ProductResponseDto> getProduct() {
+        return productService.getAllProducts();
     }
 
     @PostMapping
-    public ResponseEntity<Product> createProduct(@RequestBody Product product) {
-        return ResponseEntity.ok(productService.createProduct(product));
+    public ProductResponseDto createProduct(@RequestBody @Valid ProductRequestDto product) {
+        return productService.createProduct(product);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody Product product) {
-        return ResponseEntity.ok(productService.updateProduct(id, product));
+    public ProductResponseDto updateProduct(@PathVariable Long id, @RequestBody @Valid ProductRequestDto product) {
+        return productService.updateProduct(id, product);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
+    public void deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);
-        return ResponseEntity.noContent().build();
     }
 }

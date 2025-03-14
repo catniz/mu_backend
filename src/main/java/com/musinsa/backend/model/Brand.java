@@ -5,24 +5,23 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
-public class Product {
+public class Brand {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name="brand_id", insertable = false, updatable = false)
-    private Brand brand;
-
     @Column(nullable = false)
-    private Category category;
+    private String name;
 
-    @Column(nullable = false)
-    private Long price;
+    @OneToMany
+    @JoinColumn(name="brand_id")
+    private List<Product> products;
 
 }
