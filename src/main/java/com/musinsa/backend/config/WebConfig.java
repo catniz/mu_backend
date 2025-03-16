@@ -3,6 +3,7 @@ package com.musinsa.backend.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.format.FormatterRegistry;
 import org.springframework.format.support.FormattingConversionService;
 import org.springframework.web.accept.ContentNegotiationManager;
 import org.springframework.web.servlet.config.annotation.DelegatingWebMvcConfiguration;
@@ -11,6 +12,10 @@ import org.springframework.web.servlet.resource.ResourceUrlProvider;
 
 @Configuration
 public class WebConfig extends DelegatingWebMvcConfiguration {
+    @Override
+    protected void addFormatters(FormatterRegistry registry) {
+        registry.addConverter(new StringToCategoryConverter());
+    }
 
     @Override
     protected RequestMappingHandlerMapping createRequestMappingHandlerMapping() {

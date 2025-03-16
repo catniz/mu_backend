@@ -31,7 +31,7 @@ public enum Category {
         try {
             return Category.valueOf(name.toUpperCase());
         } catch (IllegalArgumentException | NullPointerException e) {
-            throw new IllegalArgumentException("unknown category", e);
+            throw new IllegalArgumentException("unknown category. name: " + name);
         }
     }
 }

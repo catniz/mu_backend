@@ -1,5 +1,6 @@
 plugins {
 	java
+	groovy
 	id("org.springframework.boot") version "3.4.3"
 	id("io.spring.dependency-management") version "1.1.7"
 }
@@ -31,8 +32,17 @@ dependencies {
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	runtimeOnly("com.h2database:h2")
 	annotationProcessor("org.projectlombok:lombok")
+
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
+	testImplementation("org.spockframework:spock-core:2.3-groovy-3.0")
+	testImplementation("org.spockframework:spock-spring:2.3-groovy-3.0")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+}
+
+sourceSets {
+	test {
+		groovy.srcDirs("src/test/groovy")
+	}
 }
 
 tasks.withType<Test> {

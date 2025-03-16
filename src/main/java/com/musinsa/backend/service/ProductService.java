@@ -3,6 +3,7 @@ package com.musinsa.backend.service;
 import com.musinsa.backend.dto.ProductRequestDto;
 import com.musinsa.backend.dto.ProductResponseDto;
 import com.musinsa.backend.model.Brand;
+import com.musinsa.backend.model.Category;
 import com.musinsa.backend.model.Product;
 import com.musinsa.backend.repository.BrandRepository;
 import com.musinsa.backend.repository.ProductRepository;
@@ -22,6 +23,10 @@ public class ProductService {
 
     public List<ProductResponseDto> getAllProducts() {
         return productRepository.findAll().stream().map(ProductResponseDto::fromEntity).toList();
+    }
+
+    public List<ProductResponseDto> getByCategory(Category category) {
+        return productRepository.findByCategory(category).stream().map(ProductResponseDto::fromEntity).toList();
     }
 
     private Brand getBrandById(Long id) {
