@@ -5,6 +5,9 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
+import java.util.Arrays;
+import java.util.List;
+
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 @Getter
 public enum Category {
@@ -19,10 +22,11 @@ public enum Category {
     UNKNOWN("-");
 
     @JsonProperty("name")
-    private final String name = this.name();
+    private final String name;
     private final String koreanName;
 
     Category(String koreanName) {
+        this.name = super.name();
         this.koreanName = koreanName;
     }
 
@@ -33,5 +37,10 @@ public enum Category {
         } catch (IllegalArgumentException | NullPointerException e) {
             throw new IllegalArgumentException("unknown category. name: " + name);
         }
+    }
+
+    private static final List<Category> VALID_CATEGORIES = Arrays.stream(Category.values()).filter(c -> c != Category.UNKNOWN).toList();
+    public static List<Category> validValues() {
+        return VALID_CATEGORIES;
     }
 }

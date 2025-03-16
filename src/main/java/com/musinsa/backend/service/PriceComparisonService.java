@@ -1,11 +1,13 @@
 package com.musinsa.backend.service;
 
 import com.musinsa.backend.dto.CategoryMinMaxPriceDto;
+import com.musinsa.backend.dto.LowestPriceProductsByCategoryDto;
 import com.musinsa.backend.dto.ProductResponseDto;
 import com.musinsa.backend.model.Category;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
@@ -14,13 +16,26 @@ import java.util.List;
 public class PriceComparisonService {
     private final ProductService productService;
 
+    public LowestPriceProductsByCategoryDto getLowestByCategory(List<Category> categories) {
+        List<ProductResponseDto> lowestProducts = categories.stream().
+                map(category -> getCategoryMinMaxPrice(category).getMinPriceProduct()).
+                toList();
+        Long totalPrice = lowestProducts.stream().mapToLong(ProductResponseDto::getPrice).sum();
+
+        return LowestPriceProductsByCategoryDto.builder().
+                totalPrice(totalPrice).
+                products(lowestProducts).
+                build();
+    }
+
+
     public CategoryMinMaxPriceDto getCategoryMinMaxPrice(Category category) {
         ProductResponseDto minProduct = null, maxProduct = null;
 
         List<ProductResponseDto> productsByCategory = productService.getByCategory(category);
 
-        if (productsByCategory.isEmpty()) {
-            throw new EntityNotFoundException("No products found for the given category.");
+        if (CollectionUtils.isEmpty(productsByCategory)) {
+            throw new EntityNotFoundException("No products found for the given category " + category.getName());
         }
 
         for (ProductResponseDto product : productsByCategory) {
