@@ -12,9 +12,8 @@
 # start application - 실행 포트: 8080
 ./gradlew bootRun
 
-
 ```
-
+- 초기 데이터는 [import.sql](src/main/resources/import.sql)을 참고해주세요.
 ## 구현 기능
 1. 모든 카테고리의 최저가격 상품, 가격 총합 조회  
    - 카테고리별 최저가격인 브랜드와 가격을 조회하고 총액을 확인할 수 있습니다.
@@ -61,7 +60,7 @@
 #### GET /api/price-comparison/lowest-by-all-category
 - 카테고리별 최저가격인 브랜드와 가격을 조회하고 총액을 확인할 수 있습니다.
 - Response
-  - LowestPriceProductsByCategoryDto.class
+  - [LowestPriceProductsByCategoryDto.java](src/main/java/com/musinsa/backend/dto/LowestPriceProductsByCategoryDto.java)
     ```
       totalPrice: long
       products: []object
@@ -79,7 +78,7 @@
 #### GET /api/price-comparison/lowest-brand
 - 단일 브랜드로 전체 카테고리 상품을 구매할 경우 최저가격인 브랜드와 총액을 확인할 수 있습니다.
 - Response
-    - LowestPriceBrandDto.class
+    - [LowestPriceBrandDto.java](src/main/java/com/musinsa/backend/dto/LowestPriceBrandDto.java)
       ```
         brand: object
           id: long
@@ -102,7 +101,7 @@
 - Request Param
   - category: 조회하고자 하는 category
 - Response
-    - CategoryMinMaxPriceDto.class
+    - [CategoryMinMaxPriceDto.java](src/main/java/com/musinsa/backend/dto/CategoryMinMaxPriceDto.java)
       ```
         category: object
           name: string
@@ -132,7 +131,7 @@
 - 새로운 브랜드 등록
   - 새로운 브랜드는 항상 모든 카테고리의 상품을 1개씩 등록해야 합니다.
 - Request Body
-  - BrandCreateDto.class
+  - [BrandCreateDto.java](src/main/java/com/musinsa/backend/dto/BrandCreateDto.java)
     ```
       name: string
       products: []object
@@ -163,7 +162,7 @@
   - Path
     - brandId: 변경하고자 하는 brand Id
   - Body
-    - BrandUpdateDto.class
+    - [BrandUpdateDto.java](src/main/java/com/musinsa/backend/dto/BrandUpdateDto.java)
       ```
         name: string
         
@@ -188,7 +187,7 @@
   - Path
     - brandId: 추가하려는 brand Id
   - Body
-    - ProductCreateDto.class
+    - [ProductCreateDto.java](src/main/java/com/musinsa/backend/dto/ProductCreateDto.java)
       ```
         category: string
         price: long
@@ -208,7 +207,7 @@
   - Path
     - productId: 변경하고자 하는 product Id
   - Body
-    - ProductUpdateDto.class
+    - [ProductUpdateDto.java](src/main/java/com/musinsa/backend/dto/ProductUpdateDto.java)
       ```
         price: long
           
