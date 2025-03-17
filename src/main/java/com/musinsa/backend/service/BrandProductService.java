@@ -20,19 +20,29 @@ public class BrandProductService {
     private final BrandRepository brandRepository;
     private final ProductRepository productRepository;
 
+    public List<BrandResponseDto> getAllBrands() {
+        return brandRepository.findAll().stream().map(BrandResponseDto::fromEntity).toList();
+    }
+
     public List<BrandWithProductsDto> getAllBrandsWithProducts() {
         return brandRepository.findAll().stream().map(BrandWithProductsDto::fromEntity).toList();
+    }
+
+    public BrandWithProductsDto getBrandWithProducts(Long id) {
+        return BrandWithProductsDto.fromEntity(getBrandById(id));
     }
 
     public List<ProductResponseDto> getAllProductsByCategory(Category category) {
         return productRepository.findByCategory(category).stream().map(ProductResponseDto::fromEntity).toList();
     }
 
-    public void createBrand(BrandCreateDto newBrand) {
+    public BrandResponseDto createBrand(BrandCreateDto newBrand) {
         newBrand.validateHasAllCategoryProducts();
 
         Brand newBrandEntity = newBrand.toEntity();
         brandRepository.save(newBrandEntity);
+
+        return BrandResponseDto.fromEntity(newBrandEntity);
     }
 
     @Transactional
@@ -46,11 +56,13 @@ public class BrandProductService {
         brandRepository.delete(brand);
     }
 
-    public void addProduct(Long brandId, ProductCreateDto productCreateDto) {
+    public ProductResponseDto addProduct(Long brandId, ProductCreateDto productCreateDto) {
         Brand brand = getBrandById(brandId);
         Product product = productCreateDto.toEntity(brand);
         product.setBrand(brand);
+
         productRepository.save(product);
+        return ProductResponseDto.fromEntity(product);
     }
 
     @Transactional

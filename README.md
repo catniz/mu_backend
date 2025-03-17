@@ -2,6 +2,7 @@
 기술 스택: Java, Spring Boot, Gradle, JPA, H2 Database
 
 ## 프로젝트 실행 방법
+### Backend (Spring Boot) 실행
 ```shell
 # clean & build
 ./gradlew clean build --refresh-dependencies
@@ -11,9 +12,22 @@
 
 # start application - 실행 포트: 8080
 ./gradlew bootRun
-
 ```
 - 초기 데이터는 [import.sql](src/main/resources/import.sql)을 참고해주세요.
+
+### Frontend 실행
+```shell
+# frontend 폴더로 이동
+cd src/main/frontend
+
+# 패키지 설치
+npm install
+
+# 개발 서버 실행 (기본 포트: 3000)
+# Backend 실행한 상태로 localhost:3000 접속
+npm start
+
+```
 ## 구현 기능
 1. 모든 카테고리의 최저가격 상품, 가격 총합 조회  
    - 카테고리별 최저가격인 브랜드와 가격을 조회하고 총액을 확인할 수 있습니다.

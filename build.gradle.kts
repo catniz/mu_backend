@@ -41,7 +41,10 @@ dependencies {
 
 sourceSets {
 	test {
-		groovy.srcDirs("src/test/groovy")
+		groovy.srcDirs("$projectDir/src/test/groovy")
+	}
+	main {
+		resources.srcDirs("$projectDir/src/main/resources")
 	}
 }
 

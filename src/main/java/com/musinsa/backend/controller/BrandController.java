@@ -1,6 +1,7 @@
 package com.musinsa.backend.controller;
 
 import com.musinsa.backend.dto.*;
+import com.musinsa.backend.model.Category;
 import com.musinsa.backend.service.BrandProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -15,14 +16,24 @@ public class BrandController {
 
     private final BrandProductService brandProductService;
 
+    @GetMapping("/category/all")
+    public List<Category> getValidCategories() {
+        return Category.validValues();
+    }
+
     @GetMapping("/all")
-    public List<BrandWithProductsDto> getAllBrandsWithProducts() {
-        return brandProductService.getAllBrandsWithProducts();
+    public List<BrandResponseDto> getAllBrands() {
+        return brandProductService.getAllBrands();
+    }
+
+    @GetMapping("/{brandId}")
+    public BrandWithProductsDto getBrandById(@PathVariable Long brandId) {
+        return brandProductService.getBrandWithProducts(brandId);
     }
 
     @PostMapping
-    public void createBrand(@RequestBody @Valid BrandCreateDto brandCreateDto) {
-        brandProductService.createBrand(brandCreateDto);
+    public BrandResponseDto createBrand(@RequestBody @Valid BrandCreateDto brandCreateDto) {
+        return brandProductService.createBrand(brandCreateDto);
     }
 
     @PutMapping("/{brandId}")
@@ -36,8 +47,8 @@ public class BrandController {
     }
 
     @PostMapping("/{brandId}/product")
-    public void addProductToBrand(@PathVariable Long brandId, @RequestBody @Valid ProductCreateDto product) {
-        brandProductService.addProduct(brandId, product);
+    public ProductResponseDto addProductToBrand(@PathVariable Long brandId, @RequestBody @Valid ProductCreateDto product) {
+        return brandProductService.addProduct(brandId, product);
     }
 
     @PutMapping("/product/{productId}")
