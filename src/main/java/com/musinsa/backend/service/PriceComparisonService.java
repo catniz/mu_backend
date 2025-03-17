@@ -13,8 +13,7 @@ import java.util.NoSuchElementException;
 @Service
 @RequiredArgsConstructor
 public class PriceComparisonService {
-    private final BrandService brandService;
-    private final ProductService productService;
+    private final BrandProductService brandProductService;
 
     public LowestPriceProductsByCategoryDto getLowestByCategory(List<Category> targetCategories) {
         List<ProductResponseDto> lowestProducts = targetCategories.stream().
@@ -29,7 +28,7 @@ public class PriceComparisonService {
     }
 
     public LowestPriceBrandDto getLowestBrand() {
-        List<BrandWithProductsDto> allBrands = brandService.getAllBrandsWithProducts().stream().
+        List<BrandWithProductsDto> allBrands = brandProductService.getAllBrandsWithProducts().stream().
                 map(b -> b.distinctProductsByCategory(BrandWithProductsDto.selectCheapestProduct())).
                 filter(b -> b.getProducts().size() == Category.validValues().size()).
                 toList();
@@ -56,7 +55,7 @@ public class PriceComparisonService {
     public CategoryMinMaxPriceDto getCategoryMinMaxPrice(Category category) {
         ProductResponseDto minProduct = null, maxProduct = null;
 
-        List<ProductResponseDto> productsByCategory = productService.getByCategory(category);
+        List<ProductResponseDto> productsByCategory = brandProductService.getAllProductsByCategory(category);
 
         if (CollectionUtils.isEmpty(productsByCategory)) {
             throw new EntityNotFoundException("No products found for the given category " + category.getName());

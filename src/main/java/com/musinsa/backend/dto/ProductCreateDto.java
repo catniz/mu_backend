@@ -12,13 +12,11 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ProductRequestDto {
-    @NotNull(message = "Brand id is required and cannot be null.")
-    private Long brandId;
+public class ProductCreateDto {
     @NotNull(message = "Category is required and cannot be null.")
     private Category category;
     @NotNull(message = "Price is required and cannot be null.")
-    @Min(value = 0, message = "Price must be at least {value}.")
+    @Min(value = 1, message = "Price must be at least {value}.")
     private Long price;
 
     public Product toEntity(Brand brand) {

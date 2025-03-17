@@ -8,6 +8,7 @@ insert into brand(id, name) values (6, 'F');
 insert into brand(id, name) values (7, 'G');
 insert into brand(id, name) values (8, 'H');
 insert into brand(id, name) values (9, 'I');
+ALTER TABLE brand ALTER COLUMN id RESTART WITH 10;
 
 -- product
 insert into product(brand_id, category, price) values (1, 'TOP', 11200);

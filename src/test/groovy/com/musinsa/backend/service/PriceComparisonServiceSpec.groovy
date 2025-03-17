@@ -9,11 +9,10 @@ import spock.lang.Specification
 import spock.lang.Subject
 
 class PriceComparisonServiceSpec extends Specification {
-    def productService = Mock(ProductService)
-    def brandService = Mock(BrandService)
+    def brandProductService = Mock(BrandProductService)
 
     @Subject
-    def service = new PriceComparisonService(brandService, productService)
+    def service = new PriceComparisonService(brandProductService)
 
     def "getLowestByCategory - normal"() {
         given:
@@ -24,8 +23,8 @@ class PriceComparisonServiceSpec extends Specification {
         def BBrandOuterProduct = createProductDto(4, "B", Category.OUTER, 5900)
         def CBrandTopProduct = createProductDto(5, "C", Category.TOP, 10000)
         def CBrandOuterProduct = createProductDto(6, "C", Category.OUTER, 6200)
-        productService.getByCategory(Category.TOP) >> [ABrandTopProduct, BBrandTopProduct, CBrandTopProduct]
-        productService.getByCategory(Category.OUTER) >> [ABrandOuterProduct, BBrandOuterProduct, CBrandOuterProduct]
+        brandProductService.getAllProductsByCategory(Category.TOP) >> [ABrandTopProduct, BBrandTopProduct, CBrandTopProduct]
+        brandProductService.getAllProductsByCategory(Category.OUTER) >> [ABrandOuterProduct, BBrandOuterProduct, CBrandOuterProduct]
 
         when:
         def result = service.getLowestByCategory(targetCategories)
@@ -43,7 +42,7 @@ class PriceComparisonServiceSpec extends Specification {
         def ABrandTopProduct = createProductDto(1, "A", Category.TOP, 11200)
         def BBrandTopProduct = createProductDto(3, "B", Category.TOP, 10500)
         def CBrandTopProduct = createProductDto(5, "C", Category.TOP, 10000)
-        productService.getByCategory(Category.TOP) >> [ABrandTopProduct, BBrandTopProduct, CBrandTopProduct]
+        brandProductService.getAllProductsByCategory(Category.TOP) >> [ABrandTopProduct, BBrandTopProduct, CBrandTopProduct]
 
         when:
         service.getLowestByCategory(targetCategories)
@@ -55,7 +54,7 @@ class PriceComparisonServiceSpec extends Specification {
 
     def "getLowestBrand - normal"() {
         given:
-        brandService.getAllBrandsWithProducts() >> [
+        brandProductService.getAllBrandsWithProducts() >> [
                 createBrandWithProducts("A", [
                         (Category.TOP): [11200],
                         (Category.OUTER): [5500],
@@ -99,7 +98,7 @@ class PriceComparisonServiceSpec extends Specification {
 
     def "getLowestBrand - 조건 만족하는 경우가 하나라도 있으면 결과 반환"() {
         given:
-        brandService.getAllBrandsWithProducts() >> [
+        brandProductService.getAllBrandsWithProducts() >> [
                 createBrandWithProducts("A", [
                         (Category.TOP): [11200],
                         (Category.OUTER): [5500],
@@ -128,7 +127,7 @@ class PriceComparisonServiceSpec extends Specification {
 
     def "getLowestBrand - 조건 만족하는 경우가 없으면 에러"() {
         given:
-        brandService.getAllBrandsWithProducts() >> [
+        brandProductService.getAllBrandsWithProducts() >> [
                 createBrandWithProducts("A", [
                         (Category.TOP): [11200],
                         (Category.OUTER): [5500],
@@ -155,7 +154,7 @@ class PriceComparisonServiceSpec extends Specification {
         def ABrandTopProduct = createProductDto(1, "A", category, 11200)
         def BBrandTopProduct = createProductDto(2, "B", category, 10500)
         def CBrandTopProduct = createProductDto(3, "C", category, 10000)
-        productService.getByCategory(category) >> [ABrandTopProduct, BBrandTopProduct, CBrandTopProduct]
+        brandProductService.getAllProductsByCategory(category) >> [ABrandTopProduct, BBrandTopProduct, CBrandTopProduct]
 
         when:
         def result = service.getCategoryMinMaxPrice(category)
@@ -171,7 +170,7 @@ class PriceComparisonServiceSpec extends Specification {
         def category = Category.TOP
 
         def ABrandTopProduct = createProductDto(1, "A", category, 11200)
-        productService.getByCategory(category) >> [ABrandTopProduct]
+        brandProductService.getAllProductsByCategory(category) >> [ABrandTopProduct]
 
         when:
         def result = service.getCategoryMinMaxPrice(category)
@@ -186,7 +185,7 @@ class PriceComparisonServiceSpec extends Specification {
         given:
         def category = Category.TOP
 
-        productService.getByCategory(category) >> []
+        brandProductService.getAllProductsByCategory(category) >> []
 
         when:
         service.getCategoryMinMaxPrice(category)

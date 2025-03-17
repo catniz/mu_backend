@@ -20,8 +20,7 @@ public class Brand {
     @Column(nullable = false)
     private String name;
 
-    @OneToMany
-    @JoinColumn(name="brand_id")
+    @OneToMany(mappedBy = "brand", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<Product> products;
 
 }

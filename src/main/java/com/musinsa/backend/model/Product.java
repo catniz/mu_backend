@@ -16,7 +16,7 @@ public class Product {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name="brand_id", insertable = false, updatable = false)
+    @JoinColumn(name="brand_id", nullable = false)
     private Brand brand;
 
     @Column(nullable = false)

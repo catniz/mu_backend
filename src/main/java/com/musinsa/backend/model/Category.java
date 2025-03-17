@@ -33,7 +33,11 @@ public enum Category {
     @JsonCreator
     public static Category fromJson(@JsonProperty("name") String name) {
         try {
-            return Category.valueOf(name.toUpperCase());
+            Category category = Category.valueOf(name.toUpperCase());
+            if (category == Category.UNKNOWN) {
+                throw new IllegalArgumentException("Invalid category: " + name);
+            }
+            return category;
         } catch (IllegalArgumentException | NullPointerException e) {
             throw new IllegalArgumentException("unknown category. name: " + name);
         }
