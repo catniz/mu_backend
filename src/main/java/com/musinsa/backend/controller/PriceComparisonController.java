@@ -1,6 +1,7 @@
 package com.musinsa.backend.controller;
 
 import com.musinsa.backend.dto.CategoryMinMaxPriceDto;
+import com.musinsa.backend.dto.LowestPriceBrandDto;
 import com.musinsa.backend.dto.LowestPriceProductsByCategoryDto;
 import com.musinsa.backend.model.Category;
 import com.musinsa.backend.service.PriceComparisonService;
@@ -20,6 +21,11 @@ public class PriceComparisonController {
     @GetMapping("/lowest-by-all-category")
     public LowestPriceProductsByCategoryDto getLowestByAllCategory() {
         return priceComparisonService.getLowestByCategory(Category.validValues());
+    }
+
+    @GetMapping("/lowest-brand")
+    public LowestPriceBrandDto getLowestBrand() {
+        return priceComparisonService.getLowestBrand();
     }
 
     @GetMapping("/min-max")

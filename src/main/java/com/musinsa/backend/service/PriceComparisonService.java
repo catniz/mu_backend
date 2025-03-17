@@ -1,8 +1,6 @@
 package com.musinsa.backend.service;
 
-import com.musinsa.backend.dto.CategoryMinMaxPriceDto;
-import com.musinsa.backend.dto.LowestPriceProductsByCategoryDto;
-import com.musinsa.backend.dto.ProductResponseDto;
+import com.musinsa.backend.dto.*;
 import com.musinsa.backend.model.Category;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -10,15 +8,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
 public class PriceComparisonService {
+    private final BrandService brandService;
     private final ProductService productService;
 
-    public LowestPriceProductsByCategoryDto getLowestByCategory(List<Category> categories) {
-        List<ProductResponseDto> lowestProducts = categories.stream().
-                map(category -> getCategoryMinMaxPrice(category).getMinPriceProduct()).
+    public LowestPriceProductsByCategoryDto getLowestByCategory(List<Category> targetCategories) {
+        List<ProductResponseDto> lowestProducts = targetCategories.stream().
+                map(targetCategory -> getCategoryMinMaxPrice(targetCategory).getMinPriceProduct()).
                 toList();
         Long totalPrice = lowestProducts.stream().mapToLong(ProductResponseDto::getPrice).sum();
 
@@ -28,6 +28,30 @@ public class PriceComparisonService {
                 build();
     }
 
+    public LowestPriceBrandDto getLowestBrand() {
+        List<BrandWithProductsDto> allBrands = brandService.getAllBrandsWithProducts().stream().
+                map(b -> b.distinctProductsByCategory(BrandWithProductsDto.selectCheapestProduct())).
+                filter(b -> b.getProducts().size() == Category.validValues().size()).
+                toList();
+
+        Long lowestPrice = -1L;
+        BrandWithProductsDto cheapestBrand = null;
+        for (BrandWithProductsDto brand : allBrands) {
+            if (lowestPrice == -1L || brand.getTotalPrice() < lowestPrice) {
+                lowestPrice = brand.getTotalPrice();
+                cheapestBrand = brand;
+            }
+        }
+
+        if (lowestPrice == -1L) {
+            throw new NoSuchElementException("No brand has products in all required categories");
+        }
+        return LowestPriceBrandDto.builder().
+                brand(new BrandResponseDto(cheapestBrand.getId(), cheapestBrand.getName())).
+                products(cheapestBrand.getProducts()).
+                totalPrice(lowestPrice).
+                build();
+    }
 
     public CategoryMinMaxPriceDto getCategoryMinMaxPrice(Category category) {
         ProductResponseDto minProduct = null, maxProduct = null;
